@@ -19,7 +19,7 @@ export default function ThemeProvider({
   return (
     <NextThemeProvider {...props}>
       <Header />
-      <main className={cn("container mx-auto px-4", containerClassName)}>
+      <main className={cn("container mx-auto px-4 mt-4", containerClassName)}>
         {children}
       </main>
     </NextThemeProvider>
