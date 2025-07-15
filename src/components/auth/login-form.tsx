@@ -13,6 +13,9 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Login schema
 const loginSchema = z.object({
@@ -24,6 +27,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 function LoginForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -36,9 +40,20 @@ function LoginForm() {
   const onLoginSubmit = async (values: LoginFormValues) => {
       setIsLoading(true);
       try {
-          console.log(values)
+        const {error} = await signIn.email({
+          email: values.email,
+          password: values.password,
+          rememberMe: true
+        });
+
+        if (error) {
+          toast("Login Failed");
+          return;
+        }
+        toast("Login successfull");
+        router.push("/");
       } catch (error) {
-        
+        console.error(error);
       } finally {
         setIsLoading(false);
       }

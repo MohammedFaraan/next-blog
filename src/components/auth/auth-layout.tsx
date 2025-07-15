@@ -13,7 +13,7 @@ function AuthLayout() {
       <div className="w-full p-5 max-w-md bg-card border-2 rounded-lg shadow-sm">
         <h2 className="font-bold text-2xl text-center mb-4">Welcome!</h2>
         <Tabs
-          defaultValue={activeTab}
+          value={activeTab}
           onValueChange={setActiveTab}
           className="w-full"
         >
@@ -25,7 +25,7 @@ function AuthLayout() {
             <LoginForm />
           </TabsContent>
           <TabsContent value="register">
-            <RegisterForm />
+            <RegisterForm onSuccess={() => setActiveTab("login")}/>
           </TabsContent>
         </Tabs>
       </div>

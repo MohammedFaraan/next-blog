@@ -14,6 +14,8 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { signUp } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 // Registeration schema
 const registerSchema = z
@@ -32,7 +34,11 @@ const registerSchema = z
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-function RegisterForm() {
+interface RegisterFormProps {
+  onSuccess?: () => void;
+}
+
+function RegisterForm({onSuccess}: RegisterFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<RegisterFormValues>({
@@ -48,9 +54,23 @@ function RegisterForm() {
   const onRegisterSubmit = async (values: RegisterFormValues) => {
       setIsLoading(true);
       try {
-          console.log(values)
-      } catch (error) {
-        
+          const {error} = await signUp.email({
+            name: values.name,
+            email: values.email,
+            password: values.password
+          });
+
+          if (error) {
+            toast("Failed to create account. Please try again");
+            return
+          }
+          toast("Your account has been created successfully. Please login with email & password");
+          
+          if (onSuccess) {
+            onSuccess();
+          }
+        } catch (err) {
+        console.error(err)
       } finally {
         setIsLoading(false);
       }
